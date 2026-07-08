@@ -1,23 +1,24 @@
 package blockchain
 
 import (
+	"fmt"
+	"time"
 	"toy-blockchain/block"
 	"toy-blockchain/ledger"
 )
-import "time"
 
 type Blockchain struct {
-	Blocks []block.Block
+	Blocks              []block.Block
 	PendingTransactions []ledger.Transaction
 }
 
 func NewBlockchain() *Blockchain {
 	genesisBlock := block.Block{
 		Index:        0,
-		Timestamp: time.Now().Unix(),
+		Timestamp:    time.Now().Unix(),
 		Transactions: []ledger.Transaction{},
 		PreviousHash: "0x0000000000000000",
-		Nonce: 0,
+		Nonce:        0,
 	}
 
 	genesisBlock.Hash = block.CalculateHash(genesisBlock)
@@ -46,4 +47,16 @@ func (bc *Blockchain) AddBlock(transactions []ledger.Transaction) {
 
 func (bc *Blockchain) AddTransaction(tx ledger.Transaction) {
 	bc.PendingTransactions = append(bc.PendingTransactions, tx)
+}
+
+func (bc *Blockchain) MinePendingTransactions() {
+
+	if len(bc.PendingTransactions) == 0 {
+		fmt.Println("No transactions available")
+		return
+	}
+
+	bc.AddBlock(bc.PendingTransactions)
+
+	bc.PendingTransactions = []ledger.Transaction{}
 }

@@ -36,25 +36,23 @@ func (cli *CLI) Run() {
 			cli.addTransaction(scanner)
 
 		case "2":
-		if len(cli.Chain.PendingTransactions) == 0 {
-			fmt.Println("No transactions to mine")
-			break
-		}
 
-		cli.Chain.AddBlock(cli.Chain.PendingTransactions)
-		cli.Chain.PendingTransactions = nil
+		fmt.Println("Pending Transactions:", cli.Chain.PendingTransactions)
+
+		cli.Chain.MinePendingTransactions()
 
 		fmt.Println("Block mined successfully!")
+
 
 		case "3":
 			cli.printChain()
 
 		case "4":
 			if cli.Chain.IsValid() {
-			fmt.Println("Blockchain is VALID")
-		} else {
-			fmt.Println("Blockchain is INVALID")
-		}
+				fmt.Println("Blockchain is VALID")
+			} else {
+				fmt.Println("Blockchain is INVALID")
+			}
 
 		case "5":
 			fmt.Println("Exiting...")
@@ -90,7 +88,13 @@ func (cli *CLI) addTransaction(scanner *bufio.Scanner) {
 		Sender:    sender,
 		Recipient: recipient,
 		Amount:    amount,
+
 	}
+
+	if !ledger.ValidateTransaction(tx) {
+	fmt.Println("Invalid transaction")
+	return
+}
 
 	cli.Chain.AddTransaction(tx)
 	fmt.Println("Transaction added to pool")

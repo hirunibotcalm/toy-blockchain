@@ -1,7 +1,7 @@
 package ledger
 
 type Transaction struct {
-	Sender string
+	Sender    string
 	Recipient string
-	Amount float64
+	Amount    float64
 }
