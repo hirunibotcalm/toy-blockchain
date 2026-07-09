@@ -37,12 +37,11 @@ func (cli *CLI) Run() {
 
 		case "2":
 
-		fmt.Println("Pending Transactions:", cli.Chain.PendingTransactions)
+			fmt.Println("Pending Transactions:", cli.Chain.PendingTransactions)
 
-		cli.Chain.MinePendingTransactions()
+			cli.Chain.MinePendingTransactions()
 
-		fmt.Println("Block mined successfully!")
-
+			fmt.Println("Block mined successfully!")
 
 		case "3":
 			cli.printChain()
@@ -88,13 +87,12 @@ func (cli *CLI) addTransaction(scanner *bufio.Scanner) {
 		Sender:    sender,
 		Recipient: recipient,
 		Amount:    amount,
-
 	}
 
 	if !ledger.ValidateTransaction(tx) {
-	fmt.Println("Invalid transaction")
-	return
-}
+		fmt.Println("Invalid transaction")
+		return
+	}
 
 	cli.Chain.AddTransaction(tx)
 	fmt.Println("Transaction added to pool")
