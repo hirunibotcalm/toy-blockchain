@@ -19,12 +19,17 @@ func (cli *CLI) Run() {
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for {
-		fmt.Println("\n===== TOY BLOCKCHAIN MENU =====")
+
+		fmt.Println() // creates empty line before menu
+
+		fmt.Println("===== TOY BLOCKCHAIN MENU =====")
 		fmt.Println("1. Add Transaction")
-		fmt.Println("2. Mine Block")
-		fmt.Println("3. View Blockchain")
-		fmt.Println("4. Check Validity")
-		fmt.Println("5. Exit")
+		fmt.Println("2. Mine Transactions")
+		fmt.Println("3. Generate Reward")
+		fmt.Println("4. View Blockchain")
+		fmt.Println("5. View Balance")
+		fmt.Println("6. Check Validity")
+		fmt.Println("7. Exit")
 		fmt.Print("Choose option: ")
 
 		scanner.Scan()
@@ -37,23 +42,33 @@ func (cli *CLI) Run() {
 
 		case "2":
 
-			fmt.Println("Pending Transactions:", cli.Chain.PendingTransactions)
-
-			cli.Chain.MinePendingTransactions()
-
-			fmt.Println("Block mined successfully!")
+			cli.Chain.MineTransactions()
 
 		case "3":
-			cli.printChain()
+
+			fmt.Print("Miner name: ")
+
+			scanner.Scan()
+
+			miner := scanner.Text()
+
+			cli.Chain.GenerateReward(miner)
 
 		case "4":
+			cli.printChain()
+
+		case "5":
+
+			cli.viewBalances()
+
+		case "6":
 			if cli.Chain.IsValid() {
 				fmt.Println("Blockchain is VALID")
 			} else {
 				fmt.Println("Blockchain is INVALID")
 			}
 
-		case "5":
+		case "7":
 			fmt.Println("Exiting...")
 			return
 
@@ -94,7 +109,15 @@ func (cli *CLI) addTransaction(scanner *bufio.Scanner) {
 		return
 	}
 
-	cli.Chain.AddTransaction(tx)
+	success := cli.Chain.AddTransaction(tx)
+
+	if !success {
+
+		fmt.Println("Transaction rejected: insufficient balance")
+
+		return
+	}
+
 	fmt.Println("Transaction added to pool")
 }
 
@@ -106,4 +129,16 @@ func (cli *CLI) printChain() {
 		fmt.Println("PrevHash:", block.PreviousHash)
 		fmt.Println("Transactions:", block.Transactions)
 	}
+}
+
+func (cli *CLI) viewBalances() {
+
+	fmt.Println("\n===== BALANCES =====")
+
+	for user, balance := range cli.Chain.Balances {
+
+		fmt.Println(user, ":", balance)
+
+	}
+
 }
