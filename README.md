@@ -4,8 +4,7 @@ A simple blockchain and ledger simulator implemented from scratch using **Go (Go
 
 This project demonstrates the fundamental concepts behind blockchain technology, including blocks, transactions, cryptographic hashing, proof-of-work mining, blockchain validation, and a command-line interface.
 
-The system allows users to create transactions, mine new blocks, view the blockchain history, and verify the integrity of the chain.
-
+The system allows users to create transactions, maintain account balances, mine pending transactions, generate mining rewards, view blockchain history, and verify blockchain integrity.
 ---
 
 # Project Overview
@@ -26,6 +25,28 @@ This project implements a simplified blockchain model for learning and demonstra
 ---
 
 # Features
+
+## Account Balance Management
+
+* Maintain user balances
+* Prevent transactions when balance is insufficient
+* Update balances only after block confirmation
+* Support SYSTEM-generated mining rewards
+
+
+## Mining Reward System
+
+* Separate mining reward generation from transaction mining
+* Allow the system to create reward transactions
+* Add rewards directly to miner accounts
+* Prevent unlimited manual coin creation by normal users
+
+
+## Transaction Security
+
+* Reject negative or zero-value transactions
+* Check sender balance before accepting transactions
+* Prevent users from spending more coins than available
 
 ## Block Management
 
@@ -72,10 +93,12 @@ Users can interact with the blockchain through a menu:
 ===== TOY BLOCKCHAIN MENU =====
 
 1. Add Transaction
-2. Mine Block
-3. View Blockchain
-4. Check Validity
-5. Exit
+2. Mine Transactions
+3. Generate Reward
+4. View Blockchain
+5. View Balance
+6. Check Validity
+7. Exit
 ```
 
 ---
@@ -151,6 +174,10 @@ Responsible for:
 * Creating genesis block
 * Adding new blocks
 * Validating blockchain
+* Managing pending transactions
+* Maintaining user balances
+* Handling mining rewards
+* Confirming transactions
 
 ### Block Package
 
@@ -166,6 +193,8 @@ Responsible for:
 
 * Transaction structure
 * Transaction validation
+* Sender and recipient information
+* Transaction amount verification
 
 ---
 
@@ -197,41 +226,51 @@ go run .
 
 Select:
 
-```
-1
-```
+3
 
-Example:
+Input:
 
-```
-Sender: Alice
-Recipient: Bob
-Amount: 100
-```
+Miner name: Alice
 
 Output:
 
-```
+Mining reward generated
+
+Balance:
+
+Alice : 50
+
+Then:
+
+1
+
+Sender: Alice
+Recipient: Bob
+Amount: 20
+
+Output:
+
 Transaction added to pool
-```
 
 ---
 
-## 2. Mine Block
+## 2. Mine Transactions
 
-Select:
-
-```
-2
-```
-
-The system performs proof-of-work mining.
+Mining takes pending transactions and creates a new block.
 
 Example:
 
-```
-Block mined successfully!
-```
+Pending:
+
+Alice -> Bob : 20
+
+
+After mining:
+
+Block 1
+
+Transactions:
+Alice -> Bob : 20
 
 ---
 
@@ -391,9 +430,18 @@ Blockchain becomes INVALID
 
 ---
 
-# Testing
+# Unit Testing
 
-The project can be checked using:
+The project includes unit tests for:
+
+* Hash generation
+* Blockchain creation
+* Block addition
+* Transaction validation
+
+Run:
+
+go test ./...
 
 ## Format Code
 
@@ -422,9 +470,10 @@ Possible future enhancements:
 * Persistent storage using JSON/database
 * Digital signatures for transactions
 * Multiple user wallets
-* Balance calculation
-* Network communication between nodes
-* More advanced consensus algorithms
+* Transaction history search
+* Blockchain network communication
+* Peer-to-peer node synchronization
+* Advanced consensus mechanisms
 
 ---
 

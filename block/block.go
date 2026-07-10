@@ -9,6 +9,6 @@ type Block struct {
 	Timestamp    int64
 	Transactions []ledger.Transaction
 	PreviousHash string
-	Hash         string
+	Hash         string // generate using SHA256
 	Nonce        int
 }
